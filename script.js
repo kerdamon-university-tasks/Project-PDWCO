@@ -2,15 +2,26 @@ window.onload = function() {
     update_comments();
 }
 
-async function fetchData(url){
+async function fetchGet(url){
     let response = await fetch(url)
+    return response.json()
+}
+
+async function fetchPost(url, data){
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    console.log(response)
     return response.json()
 }
 
 async function update_comments(){
 
-    let db_comments = await fetchData("https://pdwco-project.herokuapp.com/api/get-dict")
-    console.log(db_comments)
+    let db_comments = await fetchGet("https://pdwco-project.herokuapp.com/api/get-dict")
     
     let comments = []
 
@@ -30,14 +41,20 @@ async function update_comments(){
         blockquote.appendChild(comment_content)
         blockquote.appendChild(comment_author)
         
-        console.log(comment_div)
         comments.push(comment_div)
     }
 
     let comments_list = document.getElementById("comments-list")
     comments_list.innerHTML = ''
     for (const elem of comments){
-        console.log(elem)
         comments_list.appendChild(elem)
     }
+}
+
+async function add_to_db(){
+    let author = document.getElementById("new-comment-author").value
+    let content = document.getElementById("new-comment-content").value
+    await fetchPost('http://localhost:5000/api/add-comment', {author, content})
+    document.getElementById("new-comment-author").value = ''
+    document.getElementById("new-comment-content").value = ''
 }
