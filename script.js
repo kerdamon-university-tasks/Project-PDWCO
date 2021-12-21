@@ -21,7 +21,7 @@ async function fetchPost(url, data){
 
 async function update_comments(){
 
-    let db_comments = await fetchGet("https://pdwco-project.herokuapp.com/api/get-dict")
+    let db_comments = await fetchGet("http://localhost:5000/api/comments")
     
     let comments = []
 
@@ -54,7 +54,9 @@ async function update_comments(){
 async function add_to_db(){
     let author = document.getElementById("new-comment-author").value
     let content = document.getElementById("new-comment-content").value
-    await fetchPost('http://localhost:5000/api/add-comment', {author, content})
+    await fetchPost('http://localhost:5000/api/comment', {author, content})
     document.getElementById("new-comment-author").value = ''
     document.getElementById("new-comment-content").value = ''
+
+    update_comments()
 }
