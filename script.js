@@ -92,4 +92,5 @@ async function add_to_db(){
     document.getElementById("new-comment-content").value = ''
 
     update_comments()
+    update_representative_comment();
 }
